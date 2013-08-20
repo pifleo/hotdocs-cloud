@@ -126,7 +126,7 @@ module Hotdocs
 
             if settings
               settings.each do |k, v|
-                builder += "&#{k}=#{v || ''}"
+                builder += "&#{k.to_s}=#{v || ''}"
               end
             end
 
@@ -144,7 +144,9 @@ module Hotdocs
             end
 
             bytes = answers ? answers.force_encoding("UTF-8") : nil
-            response = resource.post(bytes) { |response, request, result| result }
+            response = resource.post(bytes) do |response, request, result|
+              result
+            end
 
             response.body
           end

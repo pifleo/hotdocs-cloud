@@ -19,7 +19,6 @@ module Hotdocs
             Base64.encode64(hmacsha.digest).strip
           end
 
-          # WIP - Maybe HASH need debug
           def self.Canonicalize paramList
             source = paramList.map do |param|
               case param
@@ -30,10 +29,7 @@ module Hotdocs
               when DateTime
                 param.utc.to_s[0..-7] + "Z"
               when Hash
-                # string[] strArray = (from kv in (Dictionary<string, string>) param
-                #    orderby kv.Key
-                #    select kv.Key + "=" + kv.Value).ToArray<string>();
-                strArray = param.sort.select { |k, v| [ k.to_s, "=", v ].join }
+                strArray = Hash[param.sort].map { |k, v| "#{k.to_s}=#{v.to_s}" }
                 strArray.join("\n")
               else
                 ""
