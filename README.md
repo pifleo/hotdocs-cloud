@@ -23,7 +23,7 @@ At least HotDocs Developer 11.0.1 (Include the Cloud Upload Plugin and export in
     client = Hotdocs::Cloud::Client::RestClient.new("SUBSCRIPTION_ID", "SIGNING_KEY")
     @get_session_id = client.CreateSession("Employment Agreement", "/EmploymentAgreement.hdpkg")
 
-###Documentations
+##Documentation
 
  - HotDocs Cloud Services Management Portal ( https://europe.hotdocs.ws/portal/ )
  - Documentation ( http://help.hotdocs.com/cloudservices/ )
