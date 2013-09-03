@@ -23,29 +23,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
-
+    # app/controllers/hotdocs_controller.rb
+    client = Hotdocs::Cloud::Client::RestClient.new("SUBSCRIPTION_ID", "SIGNING_KEY")
+    @get_session_id = client.CreateSession("Employment Agreement", "/EmploymentAgreement.hdpkg")
 
 ## Requirements
 
 A HotDocs Cloud Service account (subscription ID, signing Key).
 At least HotDocs Developer 11.0.1 (Include the Cloud Upload Plugin and export in .hdpkg format)
 
-## Examples
-
-    # app/controllers/hotdocs_controller.rb
-    client = Hotdocs::Cloud::Client::RestClient.new("SUBSCRIPTION_ID", "SIGNING_KEY")
-    @get_session_id = client.CreateSession("Employment Agreement", "/EmploymentAgreement.hdpkg")
-
 ## Documentation
 
- - HotDocs Cloud Services Management Portal ( https://europe.hotdocs.ws/portal/ )
+ - HotDocs Cloud Services Management Portal ( https://cloud.hotdocs.ws/portal/ or https://europe.hotdocs.ws/portal/ )
  - Documentation ( http://help.hotdocs.com/cloudservices/ )
  - API endpoint: https://cloud.hotdocs.ws/ (US), https://europe.hotdocs.ws/ (EU)
 
-## Development
-
-## Where is the code ?
+## Development / Where is the code ?
 
 We build the code locally in the folder of our application at the moment.
 We will publish it in this repository and as a gem when all Classes are implemented.
@@ -58,3 +51,7 @@ If you are interested, open an issue or contact us and we will publish it quickl
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Authors
+
+First version developed by WaasBros SAS for its product http://www.captaincontrat.com

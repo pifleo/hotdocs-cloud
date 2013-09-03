@@ -85,6 +85,28 @@ module Hotdocs
           response.body
         end
 
+        # http://help.hotdocs.com/cloudservices/html/M_HotDocs_Cloud_Client_RestClient_GetSessionState.htm
+        # Not working ??
+        def GetSessionState sessionId
+          address = [ @endpointAddress, "/embed/session/", sessionId, "/state" ].join
+          open(address).read
+        end
+
+        # http://help.hotdocs.com/cloudservices/html/M_HotDocs_Cloud_Client_RestClient_GetSessionDoc.htm
+        def GetSessionDoc sessionId, fileName, localPath
+          address = [ @endpointAddress, "/embed/session/", sessionId, "/docs/", fileName ].join
+          open(localPath, 'wb+') do |file|
+            file << open(address).read
+          end
+        end
+
+        # http://help.hotdocs.com/cloudservices/html/M_HotDocs_Cloud_Client_RestClient_GetSessionDocList.htm
+        def GetSessionDocList sessionId
+          address = [ @endpointAddress, "/embed/session/", sessionId, "/docs" ].join
+          result = open(address).read
+          result.split("\r\n").compact - [""] if result
+        end
+
         private
           def TryWithoutAndWithPackage packageID, billingRef, packageFile, &func
             response = func.call
@@ -130,6 +152,8 @@ module Hotdocs
               end
             end
 
+            p builder
+
             resource = ::RestClient::Resource.new( URI::encode(builder),
               :headers => {
                 :content_type => "text/xml",
@@ -145,6 +169,7 @@ module Hotdocs
 
             bytes = answers ? answers.force_encoding("UTF-8") : nil
             response = resource.post(bytes) do |response, request, result|
+              p response
               result
             end
 
