@@ -11,7 +11,7 @@ confident that it should work out of the box for most usage scenarios.
 
 Add this line to your application's Gemfile:
 
-    gem 'hotdocs-cloud'
+    gem 'hotdocs-cloud', github: 'pifleo/hotdocs-cloud'
 
 And then execute:
 
@@ -30,6 +30,7 @@ Or install it yourself as:
 ## Requirements
 
 A HotDocs Cloud Service account (subscription ID, signing Key).
+
 At least HotDocs Developer 11.0.1 (Include the Cloud Upload Plugin and export in .hdpkg format)
 
 ## Documentation
@@ -37,6 +38,7 @@ At least HotDocs Developer 11.0.1 (Include the Cloud Upload Plugin and export in
  - HotDocs Cloud Services Management Portal ( https://cloud.hotdocs.ws/portal/ or https://europe.hotdocs.ws/portal/ )
  - Documentation ( http://help.hotdocs.com/cloudservices/ )
  - API endpoint: https://cloud.hotdocs.ws/ (US), https://europe.hotdocs.ws/ (EU)
+ - Official ressources and SDK: https://github.com/HotDocsCorp/hotdocs-open-sdk
 
 ## Development / Where is the code ?
 
@@ -54,4 +56,4 @@ If you are interested, open an issue or contact us and we will publish it quickl
 
 ## Authors
 
-First version developed by WaasBros SAS for its product http://www.captaincontrat.com
+First version developed by WaasBros SAS (Paris, France) for its product http://www.captaincontrat.com/ (fr)
