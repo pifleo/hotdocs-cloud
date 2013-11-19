@@ -1,5 +1,7 @@
 # Hotdocs::Cloud
 
+[![endorse](https://api.coderwall.com/pifleo/endorsecount.png)](https://coderwall.com/pifleo)
+
 Hotdocs-cloud is a ruby client for HotDocs Cloud Services REST API
 
 HotDocs Cloud Services is a hosted document generation platform designed for enterprises that want advanced document generation technology without the upfront cost and upkeep of on-premises solutions.
