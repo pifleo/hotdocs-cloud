@@ -8,7 +8,7 @@ HOTDOC$.Locales["fr-FR"] = {
   name: "French",
   // Date & Number formatting info
   dateOrder: "DMY",
-  shortDateFormat: "dd.MM.yyyy",
+  shortDateFormat: "dd/MM/yyyy",
   months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
   monthsShort: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"],
   days: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
@@ -25,7 +25,7 @@ HOTDOC$.Locales["fr-FR"] = {
     ui_hd: "HotDocs", // used in the title bar of error message boxes, where possible
     ui_hdvers: "HotDocs Browser Interview Runtime version", // HotDocs Browser Interview Runtime version
     ui_logo: "Propulsé par HotDocs Server", // Powered by HotDocs Server
-    ui_load: "Chargement de l'Interview HotDocs...", // Loading HotDocs Interview...
+    ui_load: "Chargement du questionnaire...", // Chargement de l'Interview HotDocs... // Loading HotDocs Interview...
     ui_addl: "Des composants additionnels sont téléchargés ...", // Additional components are downloading...
     ui_wait: "Veuillez patienter", // Please wait
     ui_wait_cmp: "Merci de patienter pendant que d'autres composants sont téléchargés ...", // Please wait while additional components are downloaded...
@@ -34,6 +34,7 @@ HOTDOC$.Locales["fr-FR"] = {
     ui_io: "Structure du Questionnaire", // Interview Outline
     ui_yes: "Oui", // Yes
     ui_no: "Non", // No
+    ui_unans: "*** Non répondu ***",
     ui_other: "Autre", // Other
     ui_nota: "Aucune de ces réponses", // None of the Above
     ui_cal: "Calendrier", // Calendar
@@ -48,7 +49,7 @@ HOTDOC$.Locales["fr-FR"] = {
     ui_select: "Sele&ct", // Sele&ct
     ui_selectcaption: "Choisissez parmi les sources de réponses", // Select from Answer Source
     ui_cancel: "Annuler", // Cancel
-    ui_addbtn: "&Ajouter une autre", // Add Another
+    ui_addbtn: "&Ajouter", // Add Another
     ui_mnutt: "Menu Dialogue", // Dialog Menu
     ui_err: "Erreur", // Error
     ui_close: "Fermer", // Close
@@ -61,6 +62,7 @@ HOTDOC$.Locales["fr-FR"] = {
     hlp_do: "Faire", // Do This
     hlp_intro: "Ce guide décrit comment effectuer une interview HotDocs Server depuis un navigateur web. HotDocs Server est la version de HotDocs qui utilise un navigateur Web standard pour afficher les interviews HotDocs, ou des séances de collecte de réponses. Ces réponses sont ensuite utilisées pour assembler des documents sur un serveur Web. (Pour plus d'informations sur HotDocs Server, visitez <a href='http://www.hotdocs.com' target='_blank'>www.hotdocs.com</a> .)",
     hlp_intro2: "Lorsque vous sélectionnez un modèle pour l'assemblage, HotDocs Server présente une interview dans le navigateur Web pour recueillir des réponses requises par le modèle. Pour vous aider à répondre aux questions, la fenêtre d'interview est divisés en trois volets: la présentation de la structure du questionnaire, le volet de dialogue, et le volet des ressources. La structure du questionnaire donne un aperçu des questions auxquelles vous devez répondre, tandis que le volet de dialogue affiche les questions spécifiques. Le volet des ressources fournit des informations utiles pour vous aider à répondre à des questions ou des dialogues spécifiques.",
+    // Interview Outline Help Section
     hlp_io_ovw: "La structure du questionnaire répertorie toutes les boîtes de dialogue (ou groupes de questions) de l'interview et vous permet de vous déplacer rapidement à n'importe quel dialogue dont vous avez besoin dans l'interview. Lorsque vous cliquez sur le nom d'une boîte de dialogue, la boîte de dialogue apparaît dans le volet dialogue afin que vous puissiez répondre aux questions qui la composent.",
     hlp_io_tbl: "Les icônes suivantes sont utilisées dans la structure du questionnaire pour montrer l'état des questions dans chaque boîte de dialogue, et peut vous aider à déterminer quels dialogues contiennent des questions auxquelles vous devez encore répondre: ",
     hlp_io_du: "Aucune des questions dans la boîte de dialogue n'a de réponse.", // None of the questions in the dialog are answered.
@@ -76,6 +78,7 @@ HOTDOC$.Locales["fr-FR"] = {
     hlp_io_clsD: "Cliquez sur le bouton <b>{0}Fermer</b> dans le coin haut droit de la structure du questionnaire. Pour l'afficher à nouveau, cliquez sur le bouton <b>{1}Afficher la structure du questionnaire</b>.",
     hlp_io_vdlT: "Voir la structure du questionnaire sous forme de liste",
     hlp_io_vdlD: "Quand la structure du questionnaire est masquée, cliquez sur la flèche à côté du bouton <b>{0}Afficher la structure du questionnaire</b>. Quand la liste apparaît, cliquez sur un titre de dialogue pour aller vers ce dialogue.",
+    // Dialog Pane Help Section
     hlp_dp: "Boîtes de dialogue",
     hlp_dp_ovw: "Les questions auxquelles vous devez répondre sont présentées dans des boîtes de dialogue. Certaines questions apparaissent plusieurs fois comme une série de dialogues ou comme un tableau de données. Cela permet d'entrer plusieurs réponses pour une même question, en créant ainsi une liste de réponses. Enfin, certaines questions apparaissent dans un dialogue imbriqué. Les dialogues imbriqués représentent généralement des questions qui dépendent les unes des autres ou qui sont liés à des questions dans la boîte de dialogue principale. Elles apparaissent généralement comme une icône dans la boîte de dialogue principale, mais elles peuvent aussi apparaître comme un tableau de données dans la boîte de dialogue principale.",
     hlp_dp_tbl: "Le tableau suivant vous montre comment naviguer entre les boîtes de dialogue et répondre à plusieurs types de questions :",
@@ -99,6 +102,7 @@ HOTDOC$.Locales["fr-FR"] = {
     hlp_dp_frsD: "Cliquez soit sur le bouton <b>{0}Première</b> ou <b>{1}Dernière</b>. (Vous pouvez aussi appuyer sur les boutons <b>Alt+R/Alt+L</b>.)",
     hlp_dp_finT: "Terminer l'interview",
     hlp_dp_finD: "Cliquez sur le bouton <b>{0}Terminer</b>",
+    // Resource Pane Help Section
     hlp_rp: "Aide contextuelle",
     hlp_rp_intro: "Il arrive parfois que l'auteur de l'interview propose des aides contextuelles (ou de l'information) pour vous aider à répondre à un question dans une boîte de dialogue. Par exemple, lire un certain article de loi vous aiderait à répondre à une question bien spécifique. Quand une aide contextuelle est disponible, elle apparaît dans le volet d'aide situé tout en bas, sous la boîte de dialogue.",
     hlp_rp_how: "Pour afficher ou masquer le volet d'aide, cliquez sur le bouton <b>{0}Afficher/masquer le volet d'aide</b>. Quand le volet d'aide est affiché, vous pouvez y voir l'aide contextuelle de la question en cours dans la boîte de dialogue. (Si une question n'a pas d'aide contextuelle disponible, le volet d'aide est vide.) D'autre part, vous pouvez cliquer sur le bouton <b>{1}Voir l'aide</b> à côté de chaque question qui dispose d'une aide contextuelle pour voir le contenu dans une fenêtre séparée.",
@@ -141,6 +145,8 @@ HOTDOC$.Locales["fr-FR"] = {
     tb_rs1: 'Afficher le volet d\'aide', // Show Resource Pane
     tb_rst: 'Basculer entre l\'affichage des aides dans des fenêtres séparées ou le volet d\'aide.', // Toggle between showing resources in Pop-up windows or the Resource Pane.
     tb_hlp: 'Afficher la page d\'aide du Serveur HotDocs.', // Display the HotDocs Server help page.
+    tb_mnu: "Menu",
+    tb_mnu_tip: "Afficher la barre d'outils du Menu",
 
     // dialog navigation
     // (button captions beginning with navb_ can have keyboard shortcuts designated with an & sign,
@@ -150,6 +156,7 @@ HOTDOC$.Locales["fr-FR"] = {
     navb_Next: "&Suivant", // &Next
     navb_Last: "&Dernier", // &Last
     navb_Finish: "Term&iner", // Finish
+    navb_More: "Plus", // More
     nav_First: "Première boîte de dialogue", // First Dialog (command name for First button)
     nav_PrevU: "Boîte de Dialogue sans Réponse Précédente", // Previous Unanswered Dialog (command name for Previous Unanswered button)
     nav_Prev: "Boîte de dialogue précédente", // Previous Dialog (command name for Previous button)
@@ -159,6 +166,7 @@ HOTDOC$.Locales["fr-FR"] = {
     nav_Finish: "Terminer l'interview", // Finish Interview (tooltip for Finish button)
     nav_FinEM: "Terminer la modification de lignes / Retour à la liste", // Finish Editing Rows / Return to List (tooltip for Finish Edit Mode button)
     nav_FinPopup: "Retour au questionnaire parent", // Return to parent interview (Tooltip for the FinishPopup button)
+    nav_More: "Plus d'options de navigation", // More Navigation Buttons
     nav_leave: "Cette action mettra fin à l'interview, et les réponses que vous avez saisies seront perdues. Cliquez sur les boutons Suivant ou Précédent en bas de page pour vous déplacer dans le questionnaire. Si vous avez terminé de répondre aux questions, cliquez sur Terminer pour terminer l'interview et soumettre vos réponses.", // This will terminate the interview, and any answers you have entered will be lost. Click the Next or Previous buttons at the bottom of the page to move through the interview. If you are finished answering questions, click Finish to complete the interview and submit your answers.
     nav_warnfin: "Il s'agit de la dernière boîte de dialogue du questionnaire.", // This is the last dialog of the interview.
     nav_warnfin_unans: "Vous avez {0} question(s) sans réponse", // You have {0} unanswered question(s)
@@ -177,6 +185,7 @@ HOTDOC$.Locales["fr-FR"] = {
 
     // HotDocs resource-related language
     rs_bcap: "Afficher l'aide contextuelle'", // View Resource
+    rs_title: "Infos", // Resource
     rs_dis: "Voir chaque {0} pour les aides contextuelles disponibles", // See individual {0} for available resources
     rs_cols: "colonnes", // columns
     rs_opts: "options", // options
@@ -184,6 +193,7 @@ HOTDOC$.Locales["fr-FR"] = {
     rs_fld: "champ réponse", // answer field
     rs_dlg: "boîte de Dialogue", // dialog
     rs_ind: "{0}{1}{2} pour {3}", // {0}{1}{2} for {3}: {0} & {2} are begin/end hyperlink markup, {1} is [rs_bcap], {3} is [rs_opt]/[rs_fld]/[rs_dlg].
+    rs_dock: "Fixer le menu d'aide en bas du questionnaire", // Dock resource pane to bottom of interview
 
     // validation messages
     val_invdate: "Veuillez entrer une date valide.", // Please enter a valid date.
@@ -194,6 +204,9 @@ HOTDOC$.Locales["fr-FR"] = {
     val_reqg: "Une ou plusieurs questions sont obligatoires et demandent une réponse avant que vous puissiez terminer l'interview.", // One or more questions are required and must be answered before you can complete the interview.
     val_reqp: "Une ou plusieurs questions sont obligatoires et demandent une réponse avant que vous puissiez continuer.", // One or more questions are required and must be answered before you can proceed.
     val_reqd: "Une ou plusieurs questions dans le dialogue {0} sont obligatoires et demandent une réponse avant que vous puissiez continuer.", // One or more questions in the {0} dialog are required and must be answered before you can proceed.
+    val_dlg_errg: "Vous devez résoudre les erreurs restantes de la fenêtre avant de pouvoir terminer l'entrevue.", // You must resolve the outstanding dialog errors before you can complete the interview.
+    val_dlg_errp: "L'erreur suivante doit être résolue avant de pouvoir continuer:\r\n\r\n{1}", // This dialog contains the following error, which must be resolved before you can proceed:
+    val_dlg_errd: "La page {0} contient l'erreur suivante qui doit être résolue avant de pouvoir procéder:\r\n\r\n{1}", // The {0} dialog contains the following error, which must be resolved before you can proceed:
     val_rptlim: "Vous pouvez entrer seulement {0} ensembles de réponses pour ce dialogue.", // You can enter only {0} sets of answers for this dialog.
     val_repdel: "Etes-vous sûr de vouloir supprimer cette répétition ?", // Are you sure you want to delete this repetition?
     val_err: "Vous devez régler une ou plusieurs erreurs de saisie avant de pouvoir continuer.", // You must resolve one or more input errors before you can proceed.
@@ -228,6 +241,21 @@ HOTDOC$.Locales["fr-FR"] = {
     // date expressions are parsed using a regular expression built out of the above pieces:
     // "^{dateparse_today}\s*([+-])\s*(\d+)\s*({dateparse_days}|{dateparse_months}|{dateparse_years})$"
 
+    // HotDocs Embedded UI Strings
+    hde_assembling: "Assemblage...", // Assembling...
+    hde_complete: "Assemblage terminé", // Assembly Session Complete
+    hde_download: "Vous pouvez télécharger {0} en utilisant {1} suivant", // You may download your {0} using the following {1}: // {0} is one of hde_dl_doc; {1} is one of hde_dl_lnk
+    hde_warn: "Merci de télécharger tous les documents dont vous avez besoin avant de quitter la page.", // Please download all of the documents you need before leaving.
+    hde_expired: "Les liens de téléchargements ont expiré", // The download links have expired.
+    hde_error: "Erreur lors du contact avec le serveur {0}: {1}", // Error in contacting the server. {0}: {1} // {0} will be an error code; {1} will be an error message
+    hde_expire: "Les liens vont expirer dans {0}, ou quand vous quitterez cette page. Merci de télécharger tous les documents dont vous avez besoin avant de quitter la page.", // "Links will expire in about {0}, or when you leave this page. Please download all of the documents you need before leaving.", // {0} will be a number followed by a space and one of hd_time_minute|hd_time_hour|hd_time_day.
+    hde_dl_doc: "votre document|vos documents", // singular and plural forms of {0} in hde_download
+    hde_dl_lnk: "le lien|les liens", // singular and plural forms of {1} in hde_download
+    hde_no_docs: "Cette interview n'a produit aucun document.", // This interview produced no documents.
+    hd_time_day: "jour|jours",
+    hd_time_hour: "heure|heures",
+    hd_time_minute: "minute|minutes",
+
     // user-facing error messages (appropriate for localization)
     err_invint: "Invalide Interview: Le dialogue actuel ne peut pas être affichée <br> Vous pouvez toujours cliquer sur le bouton Terminer ci-dessous si vous souhaitez <br> présenter les résultats de cette interview!.", // Invalid Interview: The current dialog cannot be displayed!<br>&nbsp;<br>You may still click the Finish button below if you want to<br>submit the results of this interview.
     err_vers: 'Cette interview HotDocs (HDVers={0}) est incompatible avec le HotDocs Server interview runtime ({1}).', // This HotDocs interview (HDVers={0}) is incompatible with the current HotDocs Server interview runtime ({1}).
@@ -244,7 +272,6 @@ HOTDOC$.Locales["fr-FR"] = {
     err_browsm: "Vous tentez d'utiliser une interview HotDocs Server sur une plate-forme ou un navigateur non pris en charge, l'entretien peut ne pas s'afficher correctement. Continuer malgré tout?", // You are attempting to use a HotDocs Server interview on an unsupported browser or platform; the interview may not appear correctly. Continue anyway?
     err_browssl: "HotDocs Server Silverlight interviews ne sont pris en charge que dans Internet Explorer (Windows), Chrome (Windows), Firefox (Windows or Mac), and Safari (Mac uniquement).", // HotDocs Server Silverlight interviews are only supported in Internet Explorer (Windows), Chrome (Windows), Firefox (Windows or Mac), and Safari (Mac only).
     err_browsjs: "HotDocs Server JavaScript interviews nécessite Microsoft Internet Explorer 6.0 ou une version ultérieure.", // HotDocs Server JavaScript interviews require Microsoft Internet Explorer 6.0 or later.
-    err_unk: "Erreur Inconnu", // unknown error
     err_dtype: "Veuillez vous assurer que la page héberge cette interview utilise un DOCTYPE strict: comme &lt;!DOCTYPE html&gt;.",
     err_compat: "Votre navigateur semble fonctionner dans le mode IE Affichage de compatibilité. Merci de désactiver l'affichage de compatibilité pour ce site et essayez à nouveau.",
     err_handler: "Une erreur s'est produite lors de l'enregistrement des handlers pour le(s) '{0}' événement(s).",
@@ -254,7 +281,9 @@ HOTDOC$.Locales["fr-FR"] = {
     err_invprm_tb: "Impossible d'ajouter un bouton de barre d'outils: un paramètre est invalide pour AddCustomToolbarButton.",
     err_invprm_nb: "Impossible d'ajouter un bouton de barre de navigation: un paramètre est invalide pour AddCustomNavButton.",
     err_invprm_img: "Failed to set toolbar button image: invalid parameters to SetToolbarButtonImage.",
+    err_unk: "Erreur Inconnu", // unknown error
     err_noastest: "Answer sources based on answer files are not available during test in browser.",
+    err_mixedtypes: "Tentative de lecture des options de la question à choix multiples pour la variable nommée '{0}', mais son type était '{1}' au lieu de 'MC'. Vérifiez que le type de cette variable est la même dans tous les modèles liés.", // Attempted to read Multiple Choice options for the variable named '{0}', but its type was '{1}' instead of 'MC'. Verify that this variable's type is the same in all related templates.
 
     err_proc: "Failed to process the {0}() for the template '{1}'.",
     err_nocmp: "The component '{0}' does not exist.",

@@ -58,4 +58,4 @@ If you are interested, open an issue or contact us and we will publish it quickl
 
 ## Authors
 
-First version developed by WaasBros SAS (Paris, France) for its product http://www.captaincontrat.com/ (fr)
+First version developed by WaasBros SAS (Paris, France) for its product https://captaincontrat.com/ (fr)
