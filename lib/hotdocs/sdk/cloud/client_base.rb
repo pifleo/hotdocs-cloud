@@ -24,7 +24,8 @@ module Hotdocs
         def initialize subscriberID, signingKey, hostAddress = nil, servicePath = nil, proxyServerAddress = nil
           @SubscriberID       = subscriberID
           @SigningKey         = signingKey
-          @EndpointAddress    = (hostAddress || ENDPOINT_ADDRESS) + servicePath
+          @servicePath        = servicePath
+          @EndpointAddress    = File.join( (hostAddress || ENDPOINT_ADDRESS), servicePath )
           @ProxyServerAddress = proxyServerAddress
         end
 
@@ -38,9 +39,15 @@ module Hotdocs
         #   - billingRef:  This parameter lets you specify information that will be included in usage logs for this call. For example, you can use a string to uniquely identify the end user that initiated the request and/or the context in which the call was made. When you review usage logs, you can then see which end users initiated each request. That information could then be used to pass costs on to those end users if desired.
         #
         # Parameters are different than SDK to match CreateSessionImpl
-        def AssembleDocument template, answers, outputFormat: 2, settings: nil, billingRef: nil
+        #
+        # Return:
+        #   Should return an xml with informations on assemblage
+        #
+        # Help: to get assembled filename: response_xml.xpath("//FileName").text
+        #
+        def AssembleDocument template, answers, settings = nil, billingRef = nil
           TryWithoutAndWithPackage do |uploadPackage|
-            AssembleDocumentImpl(template, answers, outputFormat, settings, billingRef, uploadPackage)
+            AssembleDocumentImpl(template, answers, settings, billingRef, uploadPackage)
           end
         end
 
@@ -48,8 +55,21 @@ module Hotdocs
           raise "Not Implemented"
         end
 
-        def GetComponentInfo template, includeDialogs, billingRef
-          raise "Not Implemented"
+        #
+        # Gets component information for the specified template.
+        #
+        # Parameters:
+        #   - template: Template to assemble</param>
+        #   - includeDialogs: This indicates whether or not the returned data should include information about dialogs and their contents.
+        #   - billingRef: This parameter lets you specify information that will be included in usage logs for this call. For example, you can use a string to uniquely identify the end user that initiated the request and/or the context in which the call was made. When you review usage logs, you can then see which end users initiated each request. That information could then be used to pass costs on to those end users if desired.
+        #
+        # Returns
+        #   A ComponentInfo object containing information about the requested components.
+        #
+        def GetComponentInfo template, includeDialogs = false, billingRef = nil
+          TryWithoutAndWithPackage do |uploadPackage|
+            GetComponentInfoImpl(template, includeDialogs, billingRef, uploadPackage)
+          end
         end
 
         def GetAnswers answers, billingRef

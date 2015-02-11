@@ -1,5 +1,4 @@
-# lib/hotdocs/sdk/cloud/rest/rest_client_session.rb
-
+# lib/hotdocs/sdk/cloud/rest/client_session.rb
 module Hotdocs
   module Sdk
     module Cloud
@@ -41,7 +40,7 @@ module Hotdocs
           #  - localPath:
           # http://help.hotdocs.com/cloudservices/html/M_HotDocs_Cloud_Client_RestClient_GetSessionDoc.htm
           def GetSessionDoc sessionId, fileName, localPath
-            url = [ @EndpointAddress, "/embed/session/", sessionId, "/docs/", fileName ].join
+            url = File.join( embeddedEndpointAddress, 'session', sessionId, 'docs', fileName )
             open(localPath, 'wb+') do |file|
               file << open(url).read
             end
@@ -52,7 +51,7 @@ module Hotdocs
           #  - sessionId:
           # http://help.hotdocs.com/cloudservices/html/M_HotDocs_Cloud_Client_RestClient_GetSessionDocList.htm
           def GetSessionDocList sessionId
-            url = [ @EndpointAddress, "/embed/session/", sessionId, "/docs" ].join
+            url = File.join( embeddedEndpointAddress, 'session', sessionId, 'docs' )
             list = open(url).read
             list.split("\r\n").compact - [""] if list
           end
@@ -63,7 +62,7 @@ module Hotdocs
           # http://help.hotdocs.com/cloudservices/html/M_HotDocs_Cloud_Client_RestClient_GetSessionState.htm
           # Not working ??
           def GetSessionState sessionId
-            url = [ @EndpointAddress, "/embed/session/", sessionId, "/state" ].join
+            url = File.join( embeddedEndpointAddress, 'session', sessionId, 'state' )
             open(url).read
           end
 
@@ -90,7 +89,8 @@ module Hotdocs
               paramList = [ timestamp, @SubscriberID, packageID, billingRef, interviewFormat, outputFormat, nil ] # Additional settings = null for this app
               hmac = Server::Contracts::HMAC.CalculateHMAC(@SigningKey, paramList)
 
-              urlBuilder = [ @EndpointAddress, "/embed/newsession/", @SubscriberID, "/", packageID, "?interviewformat=", interviewFormat.to_s, "&outputformat=", outputFormat.to_s ].join
+              urlBuilder = File.join( embeddedEndpointAddress, 'newsession', @SubscriberID, packageID )
+              urlBuilder += "?interviewformat=#{ interviewFormat.to_s }&outputformat=#{ outputFormat.to_s }"
 
               if (markedVariables != nil && markedVariables.size > 0)
                 urlBuilder += "&markedvariables=" + markedVariables.join(',')
@@ -130,7 +130,7 @@ module Hotdocs
 
               resource = ::RestClient::Resource.new( URI::encode(urlBuilder),
                 :headers => {
-                  :content_type => "text/xml",
+                  :content_type => "text/xml; charset=utf-8",
                   :"x-hd-date" => timestamp.utc,
                   :Authorization => hmac,
                   :content_length => answers ? answers.size : 0
@@ -149,6 +149,10 @@ module Hotdocs
               response.body
             end
 
+            #
+            # http://help.hotdocs.com/cloudservices/WSRef_Embedded/api_resumesession.htm
+            # POST https://cloud.hotdocs.ws/embed/resumesession/{subscriberID}/{packageID}
+            #
             def ResumeSessionImpl state, streamGetter, uploadPackage
               if uploadPackage
                 base64 = state.split('#').first
@@ -166,7 +170,7 @@ module Hotdocs
               paramList = [ timestamp, @SubscriberID, state ]
               hmac = Server::Contracts::HMAC.CalculateHMAC(@SigningKey, paramList)
 
-              url = [ @EndpointAddress, "/embed/resumesession/", @SubscriberID ].join
+              url = File.join( embeddedEndpointAddress, 'resumesession', @SubscriberID )
 
               resource = ::RestClient::Resource.new( URI::encode(url),
                 :headers => {
@@ -192,6 +196,12 @@ module Hotdocs
               end
 
               response.body
+            end
+
+            # Get endpoint for embedded service
+            # Strip servicePath from URI
+            def embeddedEndpointAddress
+              @EndpointAddress.gsub(@servicePath, 'embed')
             end
         end
 

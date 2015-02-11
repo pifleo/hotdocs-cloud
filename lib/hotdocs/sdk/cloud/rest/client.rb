@@ -1,4 +1,4 @@
-# lib/hotdocs/sdk/cloud/rest/rest_client.rb
+# lib/hotdocs/sdk/cloud/rest/client.rb
 require 'open-uri'
 require 'rest_client'
 
@@ -13,9 +13,9 @@ module Hotdocs
         class Client < ClientBase
           include ClientSession
 
-          attr_accessor :OutputDir, :subscriberID, :signingKey
+          attr_accessor :outputDir, :subscriberID, :signingKey
 
-          DEFAULT_OUTPUT_DIR = ""
+          DEFAULT_OUTPUT_DIR = Dir.tmpdir
 
           class << self
             attr_accessor :subscriberID, :signingKey
@@ -28,11 +28,11 @@ module Hotdocs
           #
           # Constructs a Client object.
           #
-          def initialize subscriberID = nil, signingKey = nil, outputDir = nil, hostAddress = nil, proxyServerAddress = nil
+          def initialize subscriberID = nil, signingKey = nil, outputDirParam = nil, hostAddress = nil, proxyServerAddress = nil
             subscriberID ||= self.class.subscriberID || ENV['HOTDOCS_SUBSCRIBER_ID']
             signingKey ||= self.class.signingKey || ENV['HOTDOCS_SIGNINGKEY']
-            super(subscriberID.dup, signingKey.dup, hostAddress, "", proxyServerAddress)
-            @OutputDir = outputDir || DEFAULT_OUTPUT_DIR
+            super(subscriberID.dup, signingKey.dup, hostAddress, 'RestfulSvc.svc', proxyServerAddress)
+            @outputDir = outputDirParam || DEFAULT_OUTPUT_DIR
           end
 
           #
@@ -57,21 +57,22 @@ module Hotdocs
           #  - packageID:
           #  - billingRef:
           #  - packageStream: A stream containing the package to upload.
+          #
           # http://help.hotdocs.com/cloudservices/WSRef_Direct/api_uploadpackage.htm
           # PUT https://cloud.hotdocs.ws/hdcs/{subscriberID}/{packageID}
           def UploadPackageStream packageID, billingRef, packageStream
             utcNow = DateTime.now
             paramList = [ utcNow, @SubscriberID, packageID, nil, true, billingRef ]
             hmac = Server::Contracts::HMAC.CalculateHMAC(@SigningKey, paramList)
-            urlBuilder = [ @EndpointAddress, "/RestfulSvc.svc/", @SubscriberID, "/", packageID ].join
+            urlBuilder = File.join( @EndpointAddress, @SubscriberID, packageID )
 
             if !billingRef.blank?
-              urlBuilder += "?billingRef=" + billingRef
+              urlBuilder += '?billingRef=' + billingRef
             end
 
             resource = ::RestClient::Resource.new( URI::encode(urlBuilder),
               :headers => {
-                :content_type => "application/binary",
+                :content_type => 'application/binary',
                 :"x-hd-date" => utcNow.utc,
                 :Authorization => hmac
               }
@@ -99,11 +100,13 @@ module Hotdocs
             def TryWithoutAndWithPackage &func
               response = func.call(false)
 
-              if response.include?("HotDocs.Cloud.Storage.PackageNotFoundException")
-                response = func.call(true)
-                raise Storage::PackageNotFoundException, response if response.include?("HotDocs.Cloud.Storage.PackageNotFoundException")
-              elsif response.include?("HotDocs.Cloud.EmbeddedSvc.ResumeSession")
-                raise Storage::EmptyResumeSessionAnswerException, response
+              if response && response.respond_to?(:include?)
+                if response.include?("HotDocs.Cloud.Storage.PackageNotFoundException")
+                  response = func.call(true)
+                  raise Storage::PackageNotFoundException, response if response.include?("HotDocs.Cloud.Storage.PackageNotFoundException")
+                elsif response.include?("HotDocs.Cloud.EmbeddedSvc.ResumeSession")
+                  raise Storage::EmptyResumeSessionAnswerException, response
+                end
               end
 
               response
@@ -120,11 +123,15 @@ module Hotdocs
             #  - template:
             #  - answers:
             #  - settings:
-            #  - billingRef:
-            #  - uploadPackage:
+            #  - billingRef: This parameter lets you specify information that will be included in usage logs for this call. For example, you can use a string to uniquely identify the end user that initiated the request and/or the context in which the call was made. When you review usage logs, you can then see which end users initiated each request. That information could then be used to pass costs on to those end users if desired.
+            #  - uploadPackage: Indicates if the package should be uploaded (forcefully) or not. This should only be true if the package does not already exist in the Cloud Services cache.
             #
-            # Parameters are different than SDK to match CreateSessionImpl
-            def AssembleDocumentImpl template, answers, outputFormat, settings, billingRef, uploadPackage
+            # http://help.hotdocs.com/cloudservices/WSRef_Direct/api_assembledocument.htm
+            # POST https://cloud.hotdocs.ws/hdcs/assemble/{subscriberID}/{packageID}/{templatename=null}
+            #
+            # SDK C#: https://github.com/HotDocsCorp/hotdocs-open-sdk/blob/master/HotDocs.Sdk.Cloud/Rest/RestClient.cs#L531
+            #
+            def AssembleDocumentImpl template, answers, settings, billingRef, uploadPackage
               # if !(template.Location.is_a?(PackageTemplateLocation))
               #   raise "HotDocs Cloud Services requires the use of template packages. Please use a PackageTemplateLocation derivative."
               # end
@@ -132,21 +139,20 @@ module Hotdocs
 
               packageID = template.packageID
               packageFile = template.file_url
-              packageFilename = template.file.filename #FileName
+              templateName = nil
+              outputFormat = Server::Contracts::OutputFormat.Native # Don't Put the numeric value here ! It break the hmac !
 
               if uploadPackage
                 UploadPackage(packageID, billingRef, packageFile)
               end
 
               timestamp = DateTime.now
-
-              paramList = [ timestamp, @SubscriberID, packageID, packageFilename, false, billingRef, outputFormat, settings ]
+              paramList = [ timestamp, @SubscriberID, packageID, templateName, false, billingRef, outputFormat, settings ]
               hmac = Server::Contracts::HMAC.CalculateHMAC(@SigningKey, paramList)
-
-              urlBuilder = [ @EndpointAddress, "/RestfulSvc.svc/assemble/", @SubscriberID, "/", packageID, "/", packageFilename || "", "?format=", interviewFormat.to_s ].join
+              urlBuilder = File.join( @EndpointAddress, 'assemble', @SubscriberID, packageID, templateName || '', "?format=#{ outputFormat.to_s }" )
 
               if !billingRef.blank?
-                urlBuilder += "&billingref=" + billingRef
+                urlBuilder += '&billingRef=' + billingRef
               end
 
               if settings
@@ -155,14 +161,27 @@ module Hotdocs
                 end
               end
 
+              # Missing Output settings
+
+              # // Note that the Comments and/or Keywords values, and therefore the resulting URL, could
+              # // be extremely long.  Consumers should be aware that overly-long URLs could be rejected
+              # // by Cloud Services.  If the Comments and/or Keywords values cannot be truncated, the
+              # // consumer should use the SOAP version of the client.
+              # var outputOptionsPairs = GetOutputOptionsPairs(settings.OutputOptions);
+              # foreach (KeyValuePair<string, string> kv in outputOptionsPairs)
+              # {
+              #   urlBuilder.AppendFormat("&{0}={1}", kv.Key, kv.Value ?? "");
+              # }
+
               p urlBuilder
 
               resource = ::RestClient::Resource.new( URI::encode(urlBuilder),
                 :headers => {
-                  :content_type => "text/xml",
+                  :content_type => 'text/xml',
                   :"x-hd-date" => timestamp.utc,
                   :Authorization => hmac,
-                  :content_length => answers ? answers.size : 0
+                  :content_length => answers ? answers.size : 0,
+                  :timeout => 10 * 60 * 1000
                 }
               )
 
@@ -172,61 +191,68 @@ module Hotdocs
 
               bytes = answers ? answers.force_encoding("UTF-8") : nil
               response = resource.post(bytes) do |response, request, result|
-                p response
+                # p response
                 result
               end
 
-              response.body
+              if response.body.include?('Content-Disposition')
+                FileUtils.mkdir_p( outputDir ) unless File.exists?(outputDir)
 
-              FileUtils.mkdir_p( @OutputDir ) unless File.exists?(@OutputDir)
-              raise "Stop"
+                # h =>
+                # {
+                #   string fileName = GetFileNameFromHeaders(h);
+                #   if (fileName != null)
+                #   {
+                #     if (fileName.Equals("meta0.xml", StringComparison.OrdinalIgnoreCase))
+                #     {
+                #       return resultsStream;
+                #     }
+                #     return new FileStream(Path.Combine(outputDir, fileName), FileMode.Create);
+                #   }
+                #   return Stream.Null;
+                # },
+                h = -> (header_hash) do
+                  filename = GetFileNameFromHeaders(header_hash)
+                  if filename
+                    return 'meta0.xml' if filename == 'meta0.xml' # resultsStream
+                    filepath = File.join(outputDir, filename)
+                    return File.new(filepath, 'w+')
+                  end
+                  nil
+                end
+
+                boundary = response.body.headers[:content_type][/boundary=(.*)$/, 1]
+
+                # Each part is written to a file whose name is specified in the content-disposition
+                # header, except for the AssemblyResult part, which has a file name of "meta0.xml",
+                # and is parsed into an AssemblyResult object.
+                multipart_mime_parser = MultipartMimeParser.new
+                multipart_mime_parser.WritePartsToStreams(response.body, h, boundary)
+
+                #   if (resultsStream.Position > 0)
+                #   {
+                #     resultsStream.Position = 0;
+                #     var serializer = new XmlSerializer(typeof(AssemblyResult));
+                #     return (AssemblyResult)serializer.Deserialize(resultsStream);
+                #   }
+                #   return null;
+                if resultsStream = multipart_mime_parser.resultsStream
+                  require 'nokogiri'
+                  return Nokogiri::XML(resultsStream)
+                end
+              end
+
+              response.body
             end
 
+          private
+            def GetFileNameFromHeaders headers_hash
+              content_disposition_header = headers_hash['Content-Disposition']
+              content_disposition_header.split('; ').select { |el| el.start_with?('filename=') } .each { |x| x.slice!('filename=') } .first if content_disposition_header
+            end
         end
 
       end
     end
   end
 end
-
-    # protected internal override AssemblyResult AssembleDocumentImpl(
-    # {
-
-    #   using (var resultsStream = new MemoryStream())
-    #   {
-    #     // Each part is written to a file named after the Content-ID value,
-    #     // except for the AssemblyResult part, which has a Content-ID of "XML0",
-    #     // and is parsed into an AssemblyResult object.
-    #     _parser.WritePartsToStreams(
-    #       response.GetResponseStream(),
-    #       h =>
-    #       {
-    #         string id;
-    #         if (h.TryGetValue("Content-ID", out id))
-    #         {
-    #           // Remove angle brackets if present
-    #           if (id.StartsWith("<") && id.EndsWith(">"))
-    #           {
-    #             id = id.Substring(1, id.Length - 2);
-    #           }
-
-    #           if (id.Equals("XML0", StringComparison.OrdinalIgnoreCase))
-    #           {
-    #             return resultsStream;
-    #           }
-
-    #           return new FileStream(Path.Combine(OutputDir, id), FileMode.Create);
-    #         }
-    #         return Stream.Null;
-    #       },
-    #       (new ContentType(response.ContentType)).Boundary);
-
-    #     if (resultsStream.Position > 0)
-    #     {
-    #       resultsStream.Position = 0;
-    #       var serializer = new XmlSerializer(typeof(AssemblyResult));
-    #       return (AssemblyResult)serializer.Deserialize(resultsStream);
-    #     }
-    #     return null;
-    #   }
-    # }

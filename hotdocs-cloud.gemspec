@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "ruby-hmac", "~> 0.4.0"
   spec.add_runtime_dependency "rest-client", "~> 1.6.7" # https://github.com/rest-client/rest-client
+  spec.add_runtime_dependency "nokogiri"
 end
